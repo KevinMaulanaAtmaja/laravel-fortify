@@ -66,6 +66,14 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.passwords.reset', ['token' => $request->token]);
         });
 
+        Fortify::twoFactorChallengeView(function () {
+            return view('auth.two-factor-challenge');
+        });
+
+        Fortify::confirmPasswordView(function () {
+            return view('auth.passwords.confirm');
+        });
+
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('username', $request->username)->first();
 

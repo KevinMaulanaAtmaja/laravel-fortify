@@ -30,7 +30,28 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                        <a class="nav-link" href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
+                        @auth
+                            @if(Auth::user()->email_verified_at != null)
+                                <a class="nav-link" href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
+                                <a class="nav-link me-3" href="{{ route('twoFactorSettings') }}">{{ __('Two-Factor Settings') }}</a>
+                                    @if (Auth::user()->two_factor_secret)
+
+                                        <form method="POST" action="{{ route('two-factor.disable') }}">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="btn btn-danger btn-sm">Disable 2FA</button>
+                                        </form>
+
+                                    @else
+                                        <form method="POST" action="{{ route('two-factor.enable') }}">
+                                            @csrf
+                                            
+                                            <button type="submit" class="btn btn-primary btn-sm">Enable 2FA</button>
+                                        </form>
+                                    @endif
+                            @endif
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -55,8 +76,10 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a href="{{ route('editProfile') }}" class="dropdown-item">{{ __('Edit Profile') }}</a>
-                                    <a href="{{ route('changePassword') }}" class="dropdown-item">{{ __('Change Password') }}</a>
+                                    @if (Auth::user()->email_verified_at != null)
+                                        <a href="{{ route('editProfile') }}" class="dropdown-item">{{ __('Edit Profile') }}</a>
+                                        <a href="{{ route('changePassword') }}" class="dropdown-item">{{ __('Change Password') }}</a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

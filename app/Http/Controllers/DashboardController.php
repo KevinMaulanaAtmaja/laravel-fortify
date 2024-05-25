@@ -8,4 +8,8 @@ class DashboardController extends Controller
     {
         return view('home');
     }
+    public function twoFactorSettings()
+    {
+        return view('auth.two-factor-settings');
+    }
 }
